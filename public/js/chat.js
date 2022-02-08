@@ -31,6 +31,11 @@ socket.on("locationMessage", (locationMessage) => {
   $messages.insertAdjacentHTML("beforeend", html);
 });
 
+//options
+
+const {} = {username, room} = Qs.parse(location.search, {ignoreQueryPrefix: true});
+
+
 // send a message to the server from input
 const form = document.querySelector("#chatForm");
 
@@ -67,4 +72,11 @@ loc.addEventListener("submit", (e) => {
       longitude: position.coords.longitude,
     });
   });
+});
+
+socket.emit("join", {username, room}, (error) => {
+  if (error) {
+    alert(error);
+    location.href = "/";
+  }
 });
