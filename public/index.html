@@ -1,0 +1,64 @@
+<html>
+
+<head>
+    <title>
+        Chat App
+    </title>
+
+</head>
+
+<body>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <h1>
+        <center>Chat App</center>
+    </h1>
+
+    <p>
+        <center>
+            <h3>
+                Chat Box
+            </h3>
+        </center>
+    </p>
+
+    <div id = "messages"></div>
+    <form id="chatForm">
+        <input type="text" id="chatInput" placeholder="Enter your message here...">
+        <button name="submit" id="submitMessage">
+            Send
+        </button>
+    </form>
+
+    <form id="sendLocation">
+        <button name="sendLocation" id="sendLocation">
+            Send Location
+        </button>
+    </form>
+
+    <script id ="message-template" type = "text/html">
+        <div>
+            <p>
+               {{createdAt}} : {{message}}
+            </p>
+        </div>
+    </script>
+
+    
+    <script id ="location-message-template" type = "text/html">
+        <div>
+            <p>
+               <a href ="{{locationMessage}}">My Location</a>
+            </p>
+        </div>
+    </script>
+
+</body>
+<script src="/js/chat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- moment js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+</html>
