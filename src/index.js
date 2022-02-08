@@ -2,7 +2,7 @@ const path = require("path");
 const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
-const {generateMessage} = require("./utils/messages");
+const {generateMessage, generateLocationMessage} = require("./utils/messages");
 
 // --------------APP SETUP START-------------//
 
@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendLocation", (coords) => {
-    io.emit("locationMessage", `https://google.com/maps?q=${coords.latitude},${coords.longitude}`);
+    io.emit("locationMessage", generateLocationMessage(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`));
   });
 
   socket.on("disconnect", () => {

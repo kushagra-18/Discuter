@@ -4,7 +4,14 @@
     <title>
         Chat App
     </title>
-
+    <!-- ajax  -->
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -23,21 +30,28 @@
         </center>
     </p>
 
-    <div id = "messages"></div>
-    <form id="chatForm">
-        <input type="text" id="chatInput" placeholder="Enter your message here...">
-        <button name="submit" id="submitMessage">
-            Send
-        </button>
-    </form>
+    <div id="messages"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class='col-auto'>
+                <form id="chatForm">
+                    <input class="form-control" type="text" id="chatInput" placeholder="Enter your message here...">
+                    <button name="submit" id="submitMessage" class="btn btn-primary">
+                        Send
+                    </button>
+                </form>
+            </div>
+            <div class='col-auto'>
+                <form id="sendLocation">
+                    <button name="sendLocation" id="sendLocation" class="btn btn-primary">
+                        Send Location
+                    </button>
+                </form>
+            </div>
 
-    <form id="sendLocation">
-        <button name="sendLocation" id="sendLocation">
-            Send Location
-        </button>
-    </form>
+        </div>
 
-    <script id ="message-template" type = "text/html">
+        <script id="message-template" type="text/html">
         <div>
             <p>
                {{createdAt}} : {{message}}
@@ -45,16 +59,33 @@
         </div>
     </script>
 
-    
-    <script id ="location-message-template" type = "text/html">
+
+        <script id="location-message-template" type="text/html">
         <div>
             <p>
-               <a href ="{{locationMessage}}">My Location</a>
+            {{createdAt}}   <a href ="{{locationMessage}}">My Location</a>
             </p>
         </div>
     </script>
 
 </body>
+
+<script>
+
+    $(document).ready(function () {
+        $('#submitMessage').attr('disabled', true);
+        $('#chatInput').keyup(function () {
+            if ($(this).val().length != 0)
+                $('#submitMessage').attr('disabled', false);
+            else
+                $('#submitMessage').attr('disabled', true);
+        })
+    });
+
+
+    //sending message to server
+
+</script>
 <script src="/js/chat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
