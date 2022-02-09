@@ -7,6 +7,13 @@ const {
   generateLocationMessage,
 } = require("./utils/messages");
 
+const {
+  addUsers,
+  removeUser,
+  getUser,
+  getUsersInRoom,
+} = require("./utils/users");
+const { callbackify } = require("util");
 // --------------APP SETUP START-------------//
 
 const app = express();
@@ -15,7 +22,7 @@ const server = http.createServer(app);
 
 const io = socketio(server);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 const publicDirectoryPath = path.join(__dirname, "../public");
 
@@ -28,24 +35,34 @@ app.use(express.static(publicDirectoryPath));
 io.on("connection", (socket) => {
   console.log("New WebSocket connection");
 
-  socket.on("join", ({ username, room }) => {
-    socket.join(room);
+  socket.on("join", ({ username, room }, callback) => {
+    const { error, user } = addUsers({ id: socket.id, username, room });
+
+    if (error) {
+      return callbackify(error);
+    }
+
+    socket.join(user.room);
 
     socket
-      .to(room)
+      .to(user.room)
       .emit("message", generateMessage("Welcome to the chat app!"));
 
     socket.broadcast
       .to(room)
-      .emit("message", generateMessage(`${username} has joined!`));
+      .emit("message", generateMessage(`${user.username} has joined!`));
+
+    callback();
   });
 
   socket.on("sendMessage", (message) => {
-    io.emit("message", generateMessage(message));
+    const user = getUser(socket.id);
+
+    io.to(user.room).emit("message", generateMessage(message));
   });
 
   socket.on("sendLocation", (coords) => {
-    io.emit(
+    io.to(user.room).emit(
       "locationMessage",
       generateLocationMessage(
         `https://google.com/maps?q=${coords.latitude},${coords.longitude}`
@@ -54,8 +71,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    io.emit("message", generateMessage("User has left the chat!"));
-    console.log("User disconnected");
+    const user = removeUser(socket.id);
+
+    if (user) {
+      io.to(user.name).emit(
+        "message",
+        generateMessage(user.username + "User has left the chat!")
+      );
+    }
   });
 });
 
